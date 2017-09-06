@@ -1,0 +1,158 @@
+<!-- 
+        作者：dailc
+        时间：2017-09-06
+        描述： minirefresh-biz 开启biz的配置
+        注意是biz的配置，而不是minirefresh的配置，minirefresh的配置请自行前往官网参考
+-->
+<!DOCTYPE html >
+<html lang="zh-CN">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
+        <meta name="format-detection" content="telephone=no, address=no, email=no">
+        <title>MiniRefreshBiz Options</title>
+        <link rel="stylesheet" href="../libs/minirefresh/minirefresh.css" />
+        <link rel="stylesheet" href="../common/common.css" />
+    </head>
+
+    <body>
+        <nav class="navbar-header">
+            <a class="nav-btn-left" href="../index.html">dashboard</a>
+            How To Options
+        </nav>
+
+        <div class="content">
+            <div id="minirefresh" class="minirefresh-wrap">
+
+                <div class="minirefresh-scroll">
+
+                    <ul class="data-list" id="listdata">
+
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+
+        <script type="text/x-tpl" id="item-template">
+            <li class="list-item" id="{{guid}}">
+                <h3 class="msg-title">
+                    {{title}}
+                </h3>
+                <span class="msg-fs14 msg-date">
+                    {{date}}
+                </span>
+            </li>
+        </script>
+
+        <script type="text/javascript" src="../libs/mui/js/mui.min.js"></script>
+        <script type="text/javascript" src="../libs/mustache.min.js"></script>
+        <script type="text/javascript" src="../libs/minirefresh/minirefresh.js"></script>
+        <script type="text/javascript" src="../../dist/debug/minirefresh.bizlogic.js"></script>
+        <script>
+            "use strict";
+
+            initPage();
+
+            /**
+             * 页面初始化请走这个函数
+             */
+            function initPage() {
+                new MiniRefreshBiz({
+                    // setting里就是minirefresh的配置文件，这里不演示
+                    setting: {
+                        // 下拉有关
+                        down: {
+                            // 可以自定义自己的设置
+                        },
+                        // 上拉有关
+                        up: {
+                            // 可以自定义自己的设置
+                            isAuto: true
+                        }
+                    },
+                    // 是否是debug模式,如果是的话会输出错误提示
+                    isDebug: false,
+                    // 默认的下拉刷新容器选择器
+                    container: '#minirefresh',
+                    // 默认的列表数据容器选择器
+                    listContainer: '#listdata',
+                    // 表监听元素选择器,默认为给li标签添加标签
+                    itemSelector: 'li',
+                    // 是否请求完数据后就自动渲染到列表容器中,如果为false，则不会
+                    // 代表需要自己手动在成功回调中自定义渲染
+                    isAutoRender: true,
+                    delay: 500,
+                    // 得到模板 要求是一个函数(返回字符串) 或者字符串
+                    template: '#item-template',
+                    // 请求相关                    
+                    type: 'POST',
+                    // 默认的请求页面,根据不同项目服务器配置而不同,正常来说应该是0
+                    initPageIndex: 0,
+                    // 默认的请求超时时间
+                    timeout: 6000,
+                    /* ajax的Accept,不同的项目中对于传入的Accept是有要求的
+                     * 传入参数,传null为使用默认值
+                     * 示例
+                     * {
+                     * script: 'text/javascript, application/javascript, application/x-javascript',
+                     * json: 'application/json;charset=utf-8'
+                     * 等等(详情看源码)
+                     * }
+                     */
+                    accepts: {
+                        script: 'text/javascript, application/javascript, application/x-javascript',
+                        json: 'application/json',
+                        xml: 'application/xml, text/xml',
+                        html: 'text/html',
+                        text: 'text/plain'
+                    },
+                    // 默认的contentType
+                    contentType: 'application/x-www-form-urlencoded',
+                    // 自定义头部默认为空
+                    headers: null,
+                    // 得到url 要求是一个函数(返回字符串) 或者字符串
+                    url: 'http://115.29.151.25:8012/request.php?action=testV7List',
+                    // 得到请求参数 必须是一个函数,因为会根据不同的分页请求不同的数据,该函数的第一个参数是当前请求的页码
+                    dataRequest: function(currPage) {
+                        return JSON.stringify({
+                            token: 'RXBvaW50X1dlYlNlcml2Y2VfKiojIzA2MDE=',
+                            params: {
+                                pageindex: currPage,
+                                pagesize: 10,
+                                keyword: 'type1'
+                            }
+                        });
+                    },
+                    // 改变数据的函数,代表外部如何处理服务器端返回过来的数据
+                    // 如果没有传入,则采用内部默认的数据处理方法
+                    dataChange: function(response) {
+                        // 主动获取到列表数据，可以是任意格式，只需要最终转成数组即可
+                        var outData = response.custom.infolist;
+
+                        return outData;
+                    },
+                    // 列表元素点击回调，传入参数是  e,即目标对象
+                    itemClick: function(e) {
+                        console.log("点击item");
+                    },
+                    // 请求成功,并且成功处理后会调用的成功回调方法,传入参数是成功处理后的数据
+                    success: function(changedData, isFirstPage) {
+                        console.log(isFirstPage);
+                        console.log(changedData);
+                    },
+                    // 请求失败后的回调,可以自己处理逻辑,默认请求失败不做任何提示
+                    error: function(xhr, status) {
+                        console.error('请求错误：' + status);
+                    },
+                    // 下拉刷新回调,这个回调主要是为了自动映射时进行数据处理
+                    pullDown: function() {
+                        console.log("下拉了！");
+                    }
+                });
+            }
+        </script>
+    </body>
+
+</html>

@@ -15,7 +15,8 @@ pids
 lib-cov
 
 # Coverage directory used by tools like istanbul
-coverage
+_coverage
+_report
 
 # nyc test coverage
 .nyc_output
@@ -57,3 +58,5 @@ typings/
 # dotenv environment variables file
 .env
 
+account_record.md
+sauce.json

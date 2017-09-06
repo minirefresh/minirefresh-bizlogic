@@ -1,0 +1,84 @@
+<!-- 
+        作者：dailc
+        时间：2017-09-06
+        描述： minirefresh-biz 演示如何在引入其它主题的情况下强行使用default
+-->
+<!DOCTYPE html >
+<html lang="zh-CN">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
+        <meta name="format-detection" content="telephone=no, address=no, email=no">
+        <title>MiniRefreshBiz Theme Force Default</title>
+        <link rel="stylesheet" href="../libs/minirefresh/minirefresh.css" />
+        <link rel="stylesheet" href="../libs/minirefresh/themes/applet/minirefresh.theme.applet.css" />
+        <link rel="stylesheet" href="../common/common.css" />
+    </head>
+
+    <body>
+        <nav class="navbar-header">
+            <a class="nav-btn-left" href="../index.html">dashboard</a>
+            Theme Force Default
+        </nav>
+        
+        <div id="minirefresh" class="minirefresh-wrap">
+
+                <div class="minirefresh-scroll">
+
+                    <ul class="data-list" id="listdata">
+
+                    </ul>
+                </div>
+        </div>
+
+        <script type="text/x-tpl" id="item-template">
+            <li class="list-item" id="{{guid}}">
+                <h3 class="msg-title">
+                    {{title}}
+                </h3>
+                <span class="msg-fs14 msg-date">
+                    {{date}}
+                </span>
+            </li>            
+        </script>
+        
+        <script type="text/javascript" src="../libs/mui/js/mui.min.js"></script>
+        <script type="text/javascript" src="../libs/mustache.min.js"></script>
+        <script type="text/javascript" src="../libs/minirefresh/minirefresh.js"></script>
+        <script type="text/javascript" src="../libs/minirefresh/themes/applet/minirefresh.theme.applet.js"></script>
+        <script type="text/javascript" src="../../dist/debug/minirefresh.bizlogic.js"></script>
+        <script>
+            "use strict";
+
+            initPage();
+
+            /**
+             * 页面初始化请走这个函数
+             */
+            function initPage() {
+                new MiniRefreshBiz({
+                    // 可以主动传入theme，而不是使用默认的 MiniRefresh
+                    theme: MiniRefreshTools.theme.defaults,
+                    isDebug: false,
+                    delay: 500,
+                    url: 'http://115.29.151.25:8012/request.php?action=testV7List',
+                    dataRequest: function(currPage) {
+                        return JSON.stringify({
+                            token: 'RXBvaW50X1dlYlNlcml2Y2VfKiojIzA2MDE=',
+                            params: {
+                                pageindex: currPage,
+                                pagesize: 10,
+                                keyword: 'type1'
+                            }
+                        });
+                    },
+                    itemClick: function(e) {
+                        console.log("点击item");
+                    }
+                });
+            }
+        </script>
+    </body>
+
+</html>
