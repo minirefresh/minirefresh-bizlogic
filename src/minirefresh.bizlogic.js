@@ -220,7 +220,7 @@
             this.isNoMoreData = false;
             // 初始化当前页
             this.currPage = this.options.initPageIndex;
-            if (this.setting.up && this.setting.up.auto) {
+            if (this.setting.up && this.setting.up.isAuto) {
                 // 如果初始化请求,当前页面要减1
                 this.currPage--;
             }
