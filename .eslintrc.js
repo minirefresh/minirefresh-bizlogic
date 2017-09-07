@@ -16,7 +16,9 @@ module.exports = {
         "MiniRefreshTools": true,
         "MiniRefresh": true,
         "Mustache": false,
-        "mui": false
+        "mui": false,
+        "ejs": true,
+        "dd": false
     },
     // JavaScript 语言选项
     "parserOptions": {

@@ -40,6 +40,13 @@ gulp.task('pack_bizlogic_js', function() {
         .pipe(gulp.dest(debugPath));
 });
 
+// 原生主题文件
+
+gulp.task('pack_native_theme', function() {
+    return gulp.src(['./src/minirefresh.theme.native.js'])
+        .pipe(gulp.dest(debugPath));
+});
+
 // 压缩发布的源文件
 gulp.task('js_uglify', function() {
     return gulp.src([debugPath + '**/*.js', '!' + debugPath + '**/*.min.js'])
@@ -60,7 +67,7 @@ gulp.task('js_uglify', function() {
 
 gulp.task('lint', ['eslint_js']);
 
-gulp.task('pack_debug', ['pack_bizlogic_js']);
+gulp.task('pack_debug', ['pack_bizlogic_js', 'pack_native_theme']);
 
 gulp.task('pack_release', ['js_uglify']);
 

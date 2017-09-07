@@ -1,6 +1,8 @@
 /**
- * minirefresh针对业务层面的二次封装
- * 包括接口数据自动处理，上拉翻页自动处理等
+ * minirefresh biz的数据处理实现，将接口返回处理成统一数据格式，方便处理
+ * 由于不同的项目不同可能是不同的数据规范，因此单独独立出来，方便统一修改
+ * 命名空间直接绑在了 MiniRefreshTools 上
+ * 通过插拔式增加各种接口的支持
  */
 (function(globalContext, factory) {
     'use strict';
@@ -462,23 +464,21 @@
          * @param {Number} dataLen 更新的数据条数
          */
         _refreshState: function(isSuccess, dataLen) {
-            var instance = this.instance;
-
             dataLen = dataLen || 0;
             if (this.isPullDown) {
                 // 如果是下拉刷新，设置更新了多少条数据等等
-                instance.endDownLoading(isSuccess, '更新' + dataLen + '条数据');
+                this.instance.endDownLoading(isSuccess, '更新' + dataLen + '条数据');
                 // 不管是下拉刷新还是上拉加载,都要刷新加载更多状态
                 // 如果加载更多是否已经结束了
                 if (this.isNoMoreData) {
                     // 重置加载更多
-                    instance.resetUpLoading();
+                    this.instance.resetUpLoading();
                     // 又可以加载更多
                     this.isNoMoreData = false;
                 }
             }
             // 恢复上拉加载
-            instance.endUpLoading(this.isNoMoreData);
+            this.instance.endUpLoading(this.isNoMoreData);
 
             this.loadingDown = false;
             this.loadingUp = false;
@@ -523,18 +523,16 @@
          * @param {Function} callback 成功回调
          */
         loadingMore: function(callback) {
-            var instance = this.instance;
-
             // 只会用一次的，用完即可删除
             this.loadingMoreSuccess = callback;
             // 手动将状态设为可以加载更多
             if (this.isNoMoreData) {
                 // 重置加载更多
-                instance.resetUpLoading();
+                this.instance.resetUpLoading();
                 this.isNoMoreData = false;
             }
             // 触发一次加载更多
-            instance.triggerUpLoading();
+            this.instance.triggerUpLoading();
         },
         
         /**
